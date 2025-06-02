@@ -5,26 +5,26 @@ import java.util.ArrayList;
 
 public class Reservation {
 	private int num;// res_num
-	private String Service_name ; // 외래키
-	private int cus_num;// 외래키
-	private Date cindate; // res_cindate
-	private Date coutdate;//res_coutdate
-	private int tprice; //res_tprice
-	private int tpeople;// res_tpeople
+	private String serviceName ; // 외래키
+	private int cusNum;// 외래키
+	private Date checkInDate; // res_cindate
+	private Date checkOutDate;//res_coutdate
+	private int totalPrice; //res_tprice
+	private int totalPeople;// res_tpeople
 	public Reservation() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
-	public Reservation(int num, String service_name, int cus_num, Date cindate, Date coutdate, int tprice,
-			int tpeople) {
+	public Reservation(int num, String serviceName, int cusNum, Date checkInDate, Date checkOutDate, int totalPrice,
+			int totalPeople) {
 		super();
 		this.num = num;
-		Service_name = service_name;
-		this.cus_num = cus_num;
-		this.cindate = cindate;
-		this.coutdate = coutdate;
-		this.tprice = tprice;
-		this.tpeople = tpeople;
+		this.serviceName = serviceName;
+		this.cusNum = cusNum;
+		this.checkInDate = checkInDate;
+		this.checkOutDate = checkOutDate;
+		this.totalPrice = totalPrice;
+		this.totalPeople = totalPeople;
 	}
 	public int getNum() {
 		return num;
@@ -32,46 +32,47 @@ public class Reservation {
 	public void setNum(int num) {
 		this.num = num;
 	}
-	public String getService_name() {
-		return Service_name;
+	public String getServiceName() {
+		return serviceName;
 	}
-	public void setService_name(String service_name) {
-		Service_name = service_name;
+	public void setServiceName(String serviceName) {
+		this.serviceName = serviceName;
 	}
-	public int getCus_num() {
-		return cus_num;
+	public int getCusNum() {
+		return cusNum;
 	}
-	public void setCus_num(int cus_num) {
-		this.cus_num = cus_num;
+	public void setCusNum(int cusNum) {
+		this.cusNum = cusNum;
 	}
-	public Date getCindate() {
-		return cindate;
+	public Date getCheckInDate() {
+		return checkInDate;
 	}
-	public void setCindate(Date cindate) {
-		this.cindate = cindate;
+	public void setCheckInDate(Date checkInDate) {
+		this.checkInDate = checkInDate;
 	}
-	public Date getCoutdate() {
-		return coutdate;
+	public Date getCheckOutDate() {
+		return checkOutDate;
 	}
-	public void setCoutdate(Date coutdate) {
-		this.coutdate = coutdate;
+	public void setCheckOutDate(Date checkOutDate) {
+		this.checkOutDate = checkOutDate;
 	}
-	public int getTprice() {
-		return tprice;
+	public int getTotalPrice() {
+		return totalPrice;
 	}
-	public void setTprice(int tprice) {
-		this.tprice = tprice;
+	public void setTotalPrice(int totalPrice) {
+		this.totalPrice = totalPrice;
 	}
-	public int getTpeople() {
-		return tpeople;
+	public int getTotalPeople() {
+		return totalPeople;
 	}
-	public void setTpeople(int tpeople) {
-		this.tpeople = tpeople;
+	public void setTotalPeople(int totalPeople) {
+		this.totalPeople = totalPeople;
 	}
 	@Override
 	public String toString() {
-		return "Reservation [num=" + num + ", Service_name=" + Service_name + ", cus_num=" + cus_num + ", cindate="
-				+ cindate + ", coutdate=" + coutdate + ", tprice=" + tprice + ", tpeople=" + tpeople + "]";
+		return "Reservation [num=" + num + ", serviceName=" + serviceName + ", cusNum=" + cusNum + ", checkInDate="
+				+ checkInDate + ", checkOutDate=" + checkOutDate + ", totalPrice=" + totalPrice + ", totalPeople="
+				+ totalPeople + "]";
 	}
 	
 	
