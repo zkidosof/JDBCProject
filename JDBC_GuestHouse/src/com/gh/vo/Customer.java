@@ -1,7 +1,7 @@
 package com.gh.vo;
 
 import java.util.ArrayList;
-
+//123
 public class Customer {
 	private int num; // cus_num
 	private String name; // 원래 컬럼명cus_name
