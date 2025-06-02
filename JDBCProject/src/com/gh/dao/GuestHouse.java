@@ -3,6 +3,8 @@ package com.gh.dao;
 import java.util.List;
 import java.util.Map;
 
+import com.gh.vo.Customer;
+
 public interface GuestHouse {
 	// 1. 게스트하우스별 총 매출 확인 (NTILE 등 분석 함수 기반)
 	public Map<String, Integer> getTotalSalesPerGuestHouse();
