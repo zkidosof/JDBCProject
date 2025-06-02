@@ -5,15 +5,15 @@ import java.util.Map;
 
 import com.gh.vo.Customer;
 
-public interface GuestHouse {
+public interface GuestHouseDAO {
 	// 1. 게스트하우스별 총 매출 확인 (NTILE 등 분석 함수 기반)
 	public Map<String, Integer> getTotalSalesPerGuestHouse();
 
 	// 2. 게스트하우스 등록
-	public boolean registerGuestHouse(GuestHouse guestHouse);
+	public boolean registerGuestHouse(GuestHouseDAO guestHouse);
 
 	// 3. 게스트하우스 정보 수정
-	public boolean updateGuestHouse(GuestHouse guestHouse);
+	public boolean updateGuestHouse(GuestHouseDAO guestHouse);
 
 	// 4. 게스트하우스 삭제
 	public boolean deleteGuestHouse(int guestHouseId);
@@ -25,7 +25,7 @@ public interface GuestHouse {
 	public Map<String, Integer> getSalesStatsByDate(); // key: 날짜(String), value: 매출 총합
 
 	// 7. 매출 기준 Top 5 게스트하우스 조회
-	public List<GuestHouse> getTop5GuestHousesByRevenue();
+	public List<GuestHouseDAO> getTop5GuestHousesByRevenue();
 
 	// 8. 전체 회원 조회
 	public List<Customer> getAllCustomers();
