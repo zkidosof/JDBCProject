@@ -10,7 +10,7 @@ import java.util.List;
 
 import com.gh.dao.CustomerDAO;
 import com.gh.exception.DMLException;
-import com.gh.exception.DuplicateSSNException;
+import com.gh.exception.DuplicateException;
 import com.gh.exception.RecordNotFoundException;
 import com.gh.vo.Customer;
 import com.gh.vo.GuestHouse;
@@ -37,19 +37,27 @@ public class CustomerDAOImpl implements CustomerDAO{
 	}
 
 	
-	public void closeAll(PreparedStatement ps, Connection conn) throws SQLException {
-		if(ps != null) ps.close();
-		if(conn != null) conn.close();
+	public void closeAll(PreparedStatement ps, Connection conn) throws DMLException {
+		try {
+			if(ps != null) ps.close();
+			if(conn != null) conn.close();			
+		} catch (SQLException e) {
+			throw new DMLException("DB 연결해제에 실패했습니다.");
+		}
 	}
 
 
-	public void closeAll(ResultSet rs, PreparedStatement ps, Connection conn) throws SQLException {
-		if(rs != null) rs.close();
-		closeAll(ps, conn);
+	public void closeAll(ResultSet rs, PreparedStatement ps, Connection conn) throws DMLException {
+		try {
+			if(rs != null) rs.close();
+			closeAll(ps, conn);
+		} catch (SQLException e) {
+			throw new DMLException("DB 연결해제에 실패했습니다.");
+		}
 	}
 
 	@Override
-	public void registerCustomer(Customer customer) throws DuplicateSSNException, DMLException {
+	public void registerCustomer(Customer customer) throws DuplicateException, DMLException {
 		// TODO Auto-generated method stub
 		
 	}
@@ -67,7 +75,7 @@ public class CustomerDAOImpl implements CustomerDAO{
 	}
 
 	@Override
-	public void addReservation(Reservation reservation) throws DuplicateSSNException, DMLException {
+	public void addReservation(Reservation reservation) throws DuplicateException, DMLException {
 		// TODO Auto-generated method stub
 		
 	}
