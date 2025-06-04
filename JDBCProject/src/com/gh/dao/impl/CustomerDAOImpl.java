@@ -86,7 +86,7 @@ public class CustomerDAOImpl implements CustomerDAO{
 	}
 	
 	/// 숙박기간동안 총 가격 구하는 함수
-	private int totalPrice(int guestHouseNum, LocalDate checkInDate, LocalDate checkOutDate) throws DMLException, RecordNotFoundException {
+	private int totalPrice(int guestHouseNum, LocalDate checkInDate, LocalDate checkOutDate) throws RecordNotFoundException, DMLException {
 		int totalPrice = 0;
 		LocalDate date = checkInDate;
 		
@@ -193,13 +193,15 @@ public class CustomerDAOImpl implements CustomerDAO{
 			ps.setInt(3, reservation.getCusNum()); // cus_num
 			ps.setDate(4, Date.valueOf(reservation.getCheckInDate())); // res_cindate
 			ps.setDate(5, Date.valueOf(reservation.getCheckOutDate())); // res_coutdate
-			//ps.setInt(6, totalPrice(, reservation.getCheckInDate(), reservation.getCheckOutDate())); // res_tprice
+			ps.setInt(6, totalPrice(reservation.getGusNum(), reservation.getCheckInDate(), reservation.getCheckOutDate())); // res_tprice
 			ps.setInt(7, reservation.getTotalPeople()); // res_tpeople
 			
 			System.out.println("예약 " + ps.executeUpdate() + "건 등록 성공...");
 		} catch (SQLIntegrityConstraintViolationException e) {
 			throw new DuplicateException("");
 		} catch (SQLException e) {
+			throw new DMLException("예약 등록에 실패하였습니다.");
+		} catch (Exception e) {
 			throw new DMLException("예약 등록에 실패하였습니다.");
 		} finally {
 			closeAll(ps, conn);
