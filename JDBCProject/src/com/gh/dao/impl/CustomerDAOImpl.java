@@ -366,7 +366,7 @@ public class CustomerDAOImpl implements CustomerDAO{
 
 	@Override
 	public List<GuestHouse> getGuestHouses(String service) throws RecordNotFoundException, DMLException {
-		// TODO Auto-generated method stub
+		//sdfsdfsfd
 		return null;
 	}
 
