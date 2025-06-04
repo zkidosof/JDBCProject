@@ -324,14 +324,14 @@ public class GuestHouseDAOImpl implements GuestHouseDAO {
 			Map<Integer, String> ghAddressMap = new HashMap<>(); 
 			while (rs.next()) {
 				ghAllResList.put(rs.getString("address"), new ArrayList<Reservation>());
-				ghAddressMap.put(rs.getInt("gus_num"), rs.getString("gus_address"));
+				ghAddressMap.put(rs.getInt("gus_num"), rs.getString("address"));
 			}		
 			
 			query = "SELECT res_num, gus_Num, cus_num, res_cindate, res_coutdate, res_tprice, res_tpeople FROM reservation";
 			ps = conn.prepareStatement(query);
 			rs = ps.executeQuery();
 			while (rs.next()) {
-				ghAllResList.get(ghAddressMap.get(rs.getInt("gus_Num")).substring(0, 2))
+				ghAllResList.get(ghAddressMap.get(rs.getInt("gus_num")))
 							.add(new Reservation(rs.getInt("res_num"), rs.getInt("gus_Num"), rs.getInt("cus_num"), 
 									rs.getDate("res_cindate").toLocalDate(), rs.getDate("res_coutdate").toLocalDate(), 
 									rs.getInt("res_tprice"), rs.getInt("res_tpeople")));
