@@ -8,7 +8,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.SQLIntegrityConstraintViolationException;
-
+import java.sql.Timestamp;
+import java.time.LocalDate;
 import java.util.ArrayList;
 
 import java.util.List;
@@ -84,6 +85,13 @@ public class CustomerDAOImpl implements CustomerDAO{
 		
 		return rs.next(); // 예약이 있으면 true | 없으면 false
 
+	}
+	
+	private int totalPrice(LocalDate checkInDate, LocalDate checkOutDate) {
+		int totalPrice = 0;
+		
+		
+		return totalPrice;
 	}
 
 	// 비즈니스 로직
@@ -181,8 +189,8 @@ public class CustomerDAOImpl implements CustomerDAO{
 			ps.setInt(1, reservation.getNum()); // res_num
 			ps.setString(2, reservation.getServiceName()); // service_name
 			ps.setInt(3, reservation.getCusNum()); // cus_num
-			ps.setDate(4, reservation.getCheckInDate()); // res_cindate
-			ps.setDate(5, reservation.getCheckOutDate()); // res_coutdate
+			ps.setDate(4, Date.valueOf(reservation.getCheckInDate())); // res_cindate
+			ps.setDate(5, Date.valueOf(reservation.getCheckOutDate())); // res_coutdate
 			ps.setInt(6, reservation.getTotalPrice()); // res_tprice
 			ps.setInt(7, reservation.getTotalPeople()); // res_tpeople
 			
@@ -212,8 +220,8 @@ public class CustomerDAOImpl implements CustomerDAO{
 			
 			ps = conn.prepareStatement(query);
 			
-			ps.setDate(1, reservation.getCheckInDate());
-			ps.setDate(2, reservation.getCheckOutDate());
+			ps.setDate(1, Date.valueOf(reservation.getCheckInDate()));
+			ps.setDate(2, Date.valueOf(reservation.getCheckOutDate()));
 			ps.setInt(3, reservation.getTotalPeople());
 			ps.setInt(4, reservation.getNum());
 			
@@ -270,7 +278,7 @@ public class CustomerDAOImpl implements CustomerDAO{
 			
 			while(rs.next()) {
 				resList.add(new Reservation(rs.getInt("res_num"), rs.getString("service_name"), rs.getInt("cus_num"), 
-						rs.getDate("res_cindate"), rs.getDate("res_coutdate"), rs.getInt("res_tprice"), rs.getInt("res_tpeople")));
+						rs.getDate("res_cindate").toLocalDate(), rs.getDate("res_coutdate").toLocalDate(), rs.getInt("res_tprice"), rs.getInt("res_tpeople")));
 			}
 		} catch (SQLIntegrityConstraintViolationException e) {
 			throw new RecordNotFoundException("등록된 예약이 없습니다.");
