@@ -1,7 +1,6 @@
 package com.gh.dao.impl;
 
 import java.sql.Connection;
-
 import java.sql.Date;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -9,10 +8,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.SQLIntegrityConstraintViolationException;
 import java.sql.Timestamp;
-import java.time.DayOfWeek;
+import java.time.DayOfWeek
 import java.time.LocalDate;
 import java.util.ArrayList;
-
 import java.util.List;
 
 import com.gh.dao.CustomerDAO;
@@ -22,7 +20,6 @@ import com.gh.exception.RecordNotFoundException;
 import com.gh.vo.Customer;
 import com.gh.vo.GuestHouse;
 import com.gh.vo.Reservation;
-
 
 import config.ServerInfo;
 
@@ -311,7 +308,8 @@ public class CustomerDAOImpl implements CustomerDAO{
 
 	@Override
 	public List<GuestHouse> getAllGuestHouses() throws RecordNotFoundException, DMLException {
-		// TODO Auto-generated method stub
+		
+		
 		return null;
 	}
 

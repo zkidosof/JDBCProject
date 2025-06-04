@@ -37,7 +37,7 @@ public interface GuestHouseDAO {
 	public List<Customer> getAllCustomers()throws RecordNotFoundException, DMLException;
 
 	// 9. 회원 등급 부여 (예약 횟수 기반 등급)
-	public Map<Integer, String> assignCustomerGrades()throws RecordNotFoundException, DMLException; 
+	public void assignCustomerGrades()throws RecordNotFoundException, DMLException; 
 	// key: customerId, value: 등급
 
 	// 10. 전체 게스트하우스 예약 요약 (예약 수, 매출 집계)

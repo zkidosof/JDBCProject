@@ -5,6 +5,7 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -41,6 +42,15 @@ public class GuestHouseDAOImpl implements GuestHouseDAO {
 		ps.setInt(1, num);
 		ResultSet rs = ps.executeQuery();
 		return rs.next();// ssn이 있으면 true |없으면 false
+	}
+
+	public boolean isCustomerExist(int num, Connection conn) throws SQLException{
+		String query = "SELECT cus_num FROM customer WHERE cus_num=?";
+		PreparedStatement ps=conn.prepareStatement(query);
+		ps.setInt(1, num);
+		ResultSet rs = ps.executeQuery();
+		
+		return rs.next();//ssn이 있으면 true |없으면 false
 	}
 
 	public void closeAll(PreparedStatement ps, Connection conn) throws DMLException {
@@ -177,14 +187,81 @@ public class GuestHouseDAOImpl implements GuestHouseDAO {
 
 	@Override
 	public List<Customer> getAllCustomers() throws RecordNotFoundException, DMLException {
-		// TODO Auto-generated method stub
-		return null;
-	}
+		 	Connection conn = null;
+		    PreparedStatement ps  = null;
+		    ResultSet rs = null;
+		    List<Customer> list = new ArrayList<>();
+		    try {
+		        conn = getConnect();
+		        String query = "SELECT cus_num, cus_name, cus_address, cus_ssn, cus_gender, cus_phone, cus_grade FROM customer";
+		        ps = conn.prepareStatement(query);
+		        rs = ps.executeQuery();
+		        while (rs.next()) {
+		            Customer c = new Customer(
+		                rs.getInt("cus_num"),
+		                rs.getString("cus_name"),
+		                rs.getString("cus_address"),
+		                rs.getString("cus_ssn"),
+		                rs.getString("cus_gender").charAt(0),
+		                rs.getString("cus_phone"),
+		                rs.getString("cus_grade")
+		            );
+		            list.add(c);
+		        }
+		        return list;
+		    } catch (SQLException e) {
+		        throw new DMLException("회원 조회 중 문제가 발생했습니다.");
+		    } finally {
+		        closeAll(rs, ps, conn);
+		    }
+		}
 
 	@Override
-	public Map<Integer, String> assignCustomerGrades() throws RecordNotFoundException, DMLException {
-		// TODO Auto-generated method stub
-		return null;
+	public void assignCustomerGrades() throws RecordNotFoundException, DMLException {
+		Connection conn = null;
+		PreparedStatement ps = null;
+	    PreparedStatement ps2 = null;
+		ResultSet rs = null;
+		try {
+			conn = getConnect();
+			// 회원별 집계
+			String query = "SELECT cus_num, COUNT(*) AS res_count FROM reservation GROUP BY cus_num";
+			ps = conn.prepareStatement(query);
+			rs = ps.executeQuery();
+			// 회원 등급 업데이트
+			String updateQuery = "UPDATE customer SET cus_grade = ? WHERE cus_num = ?";
+	        ps2 = conn.prepareStatement(updateQuery);
+			
+	        boolean isUpdated = false;
+	        
+	        while(rs.next()) {
+	        	int cusNum  = rs.getInt("cus_num");
+	        	int count = rs.getInt("res_count");
+	        	
+	        	  String grade;
+	              if (count >= 10) grade = "VIP";
+	              else if (count >= 5) grade = "GOLD";
+	              else if (count >= 1) grade = "SILVER";
+	              else grade = "BASIC";
+	              
+	              ps2.setString(1, grade);
+	              ps2.setInt(2, cusNum);
+	             System.out.println( ps2.executeUpdate() + "회원 등급별 업데이트 완료"); 
+	             
+	             isUpdated = true;       	
+	        }
+	        if(!isUpdated)
+	        	throw new RecordNotFoundException("등급을 부여할 회원이 없습니다.");
+	        
+		}catch(SQLException e) {
+			throw new DMLException("회원 등굽 부여 중 오류 발생"+ e.getMessage());
+		
+		
+	}finally {
+			closeAll(rs, ps, conn);
+			closeAll(ps2, null);
+		}
+	
 	}
 
 	@Override
