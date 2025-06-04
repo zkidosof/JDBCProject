@@ -1,6 +1,8 @@
 package com.gh.vo;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+
 public class Reservation {
 	private int num;// res_num
 	private String serviceName ; // 외래키
@@ -72,7 +74,4 @@ public class Reservation {
 				+ checkInDate + ", checkOutDate=" + checkOutDate + ", totalPrice=" + totalPrice + ", totalPeople="
 				+ totalPeople + "]";
 	}
-	
-	
-
 }
