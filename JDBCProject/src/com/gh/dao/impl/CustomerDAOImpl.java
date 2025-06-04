@@ -106,7 +106,7 @@ public class CustomerDAOImpl implements CustomerDAO{
 		try {
 		    conn = getConnect();
 		    if (!isExist(customer.getNum(), conn)) { // 추가하려는 회원번호가 없다면
-		        String query = "INSERT INTO customer( cus_num, cus_name, cus_address, cus_ssn, cus_gender, cus_phone, cus_grade) VALUES (?, ?, ?, ?, ?, ?, ?)";
+		        String query = "INSERT INTO customer( cus_num, cus_name, cus_address, cus_ssn, cus_gender, cus_phone) VALUES (?, ?, ?, ?, ?, ?)";
 		        ps = conn.prepareStatement(query);
 		        ps.setInt(1, customer.getNum());
 		        ps.setString(2, customer.getName());
@@ -114,7 +114,6 @@ public class CustomerDAOImpl implements CustomerDAO{
 		        ps.setString(4, customer.getSsn());
 		        ps.setString(5, String.valueOf(customer.getGender())); 
 		        ps.setString(6, customer.getPhone());
-		        ps.setString(7, customer.getGrade());
 
 		        System.out.println(ps.executeUpdate() + "명 성공!!!");
 		    }
