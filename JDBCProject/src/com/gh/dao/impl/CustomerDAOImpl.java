@@ -7,7 +7,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.SQLIntegrityConstraintViolationException;
-import java.sql.Timestamp;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -307,15 +306,62 @@ public class CustomerDAOImpl implements CustomerDAO{
 
 	@Override
 	public List<GuestHouse> getAllGuestHouses() throws RecordNotFoundException, DMLException {
+		Connection conn = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		ArrayList<GuestHouse> list = new ArrayList<GuestHouse>();
+		
+		String query = "SELECT gus_num, service_name, gus_name, gus_address, gus_price, gus_capacity FROM guestHouse";
+		
+		try {
+			conn = getConnect();
+			ps = conn.prepareStatement(query);
+			rs = ps.executeQuery();
+			
+			while(rs.next()) {
+				GuestHouse gh = new GuestHouse(
+						rs.getInt("gus_num"),
+						rs.getString("service_name"),
+						rs.getString("gus_name"),
+						rs.getString("gus_address"),
+						rs.getInt("gus_price"),
+						rs.getInt("gus_capacity")
+						);
+				list.add(gh);
+			}
+			
+			
+		}catch(SQLIntegrityConstraintViolationException e) {
+			throw new RecordNotFoundException("기록된거없음");
+		}catch(SQLException e) {
+			throw new DMLException("오류발생함");
+		} finally {
+			closeAll(rs, ps, conn);
+		}
 		
 		
-		return null;
-	}
+		return list;
+		}
 
 	@Override
 	public int getRemainingCapacity(String guestHouseName) throws RecordNotFoundException, DMLException {
-		// TODO Auto-generated method stub
-		return 0;
+		Connection conn = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		int remainingCapacity = 0;
+		
+		try {
+			conn = getConnect();
+			String qeury = "SELECT ";
+		} catch(SQLIntegrityConstraintViolationException e) {
+			throw new RecordNotFoundException("해당게하 없음");
+		} catch(SQLException e) {
+			throw new DMLException("오류발생"+e.getMessage());
+		} finally {
+			closeAll(rs, ps, conn);
+		}
+		
+		return remainingCapacity;
 	}
 
 	@Override
