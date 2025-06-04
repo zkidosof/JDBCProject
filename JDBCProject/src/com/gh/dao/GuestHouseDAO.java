@@ -7,19 +7,20 @@ import com.gh.exception.DMLException;
 import com.gh.exception.DuplicateException;
 import com.gh.exception.RecordNotFoundException;
 import com.gh.vo.Customer;
+import com.gh.vo.GuestHouse;
 
 public interface GuestHouseDAO {
 	// 1. 게스트하우스별 총 매출 확인 (NTILE 등 분석 함수 기반)
 	public Map<String, Integer> getTotalSalesPerGuestHouse()throws RecordNotFoundException, DMLException;
 
 	// 2. 게스트하우스 등록
-	public boolean registerGuestHouse(GuestHouseDAO guestHouse)throws DuplicateException, DMLException;
+	public void registerGuestHouse(GuestHouse guestHouse)throws DuplicateException, DMLException;
 
 	// 3. 게스트하우스 정보 수정
-	public boolean updateGuestHouse(GuestHouseDAO guestHouse)throws RecordNotFoundException, DMLException;
+	public void updateGuestHouse(GuestHouse guestHouse)throws RecordNotFoundException, DMLException;
 
 	// 4. 게스트하우스 삭제
-	public boolean deleteGuestHouse(int guestHouseId)throws RecordNotFoundException, DMLException;
+	public void deleteGuestHouse(int guestHouseId)throws RecordNotFoundException, DMLException;
 
 	// 5. 날짜별 총 이용객 수 확인
 	public Map<String, Integer> getUsageStatsByDate()throws RecordNotFoundException, DMLException;  
