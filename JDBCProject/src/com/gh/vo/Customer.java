@@ -13,7 +13,16 @@ public class Customer {
 	ArrayList<Reservation>reservation; // reservation을 갖음
 	public Customer() {
 		super();
-		// TODO Auto-generated constructor stub
+	}
+	public Customer(int num, String name, String address, String ssn, char gender, String phone) {
+		super();
+		this.num = num;
+		this.name = name;
+		this.address = address;
+		this.ssn = ssn;
+		this.gender = gender;
+		this.phone = phone;
+		this.grade = grade;
 	}
 	public Customer(int num, String name, String address, String ssn, char gender, String phone, String grade) {
 		super();

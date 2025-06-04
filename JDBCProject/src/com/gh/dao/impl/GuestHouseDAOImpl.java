@@ -156,22 +156,24 @@ public class GuestHouseDAOImpl implements GuestHouseDAO {
 		}
 
 	}
-
+	
+	// 날짜별 총 이용객 수 확인
 	@Override
 	public Map<String, Integer> getUsageStatsByDate() throws RecordNotFoundException, DMLException {
-		// TODO Auto-generated method stub
+		
 		return null;
 	}
-
+	
+	//날짜별 총 매출 확인
 	@Override
 	public Map<String, Integer> getSalesStatsByDate() throws RecordNotFoundException, DMLException {
 		// TODO Auto-generated method stub
 		return null;
 	}
-
+	
+	//매출 기준 Top 5 게스트하우스 조회
 	@Override
 	public List<GuestHouseDAO> getTop5GHByRevenue() throws RecordNotFoundException, DMLException {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
