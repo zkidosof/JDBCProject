@@ -129,16 +129,15 @@ public class CustomerDAOImpl implements CustomerDAO{
 		try {
 		    conn = getConnect();
 		    if (isExist(customer.getNum(), conn)) { // 추가하려는 회원번호가 맞다면
-		    	String query = "UPDATE customer SET cus_name = ?, cus_address = ?, cus_ssn = ?, cus_gender = ?, cus_phone = ?, cus_grade = ? WHERE cus_num = ?";;
+		    	String query = "UPDATE customer SET cus_name = ?, cus_address = ?, cus_ssn = ?, cus_gender = ?, cus_phone = ?, cus_grade = ? WHERE cus_num = ?";
 		        ps = conn.prepareStatement(query);
-		        ps.setInt(1, customer.getNum());
-		        ps.setString(2, customer.getName());
-		        ps.setString(3, customer.getAddress());
-		        ps.setString(4, customer.getSsn());
-		        ps.setString(5, String.valueOf(customer.getGender())); 
-		        ps.setString(6, customer.getPhone());
-		        ps.setString(7, customer.getGrade());
-
+		        ps.setString(1, customer.getName());
+		        ps.setString(2, customer.getAddress());
+		        ps.setString(3, customer.getSsn());
+		        ps.setString(4, String.valueOf(customer.getGender())); 
+		        ps.setString(5, customer.getPhone());
+		        ps.setString(6, customer.getGrade());
+		        ps.setInt(7, customer.getNum());
 		        System.out.println(ps.executeUpdate() + "업데이트 성공!!!");
 		    }else {
 		    	throw new RecordNotFoundException("업데이트 할 대상을 찾지 못했습니다.");
@@ -206,8 +205,7 @@ public class CustomerDAOImpl implements CustomerDAO{
 
 	@Override
 	public void updateReservation(Reservation reservation) throws RecordNotFoundException, DMLException {
-		String query = "UPDATE reservation SET res_cindate=?, res_coutdate=?, res_tpeople=?"
-				+ "WHERE res_num=?";
+		String query = "UPDATE reservation SET res_cindate=?, res_coutdate=?, res_tpeople=? WHERE res_num=?";
 		Connection conn = null;
 		PreparedStatement ps = null;
 		
@@ -264,9 +262,9 @@ public class CustomerDAOImpl implements CustomerDAO{
 	}
 
 	@Override
-	public List<Reservation> getAllReservation(int customerId) throws RecordNotFoundException, DMLException {
+	public List<Reservation> getReservation(int customerId) throws RecordNotFoundException, DMLException {
 		List<Reservation> resList = new ArrayList<>();
-		String query = "SELECT res_num, service_name, cus_num, res_cindate, res_coutdate, res_tprice, res_tpeople FROM reservation";
+		String query = "SELECT res_num, service_name, cus_num, res_cindate, res_coutdate, res_tprice, res_tpeople FROM reservation WHERE cus_num=?";
 		Connection conn = null;
 		PreparedStatement ps = null;
 		ResultSet rs = null;
@@ -274,6 +272,7 @@ public class CustomerDAOImpl implements CustomerDAO{
 		try  {			
 			conn = getConnect();
 			ps = conn.prepareStatement(query);
+			ps.setInt(1, customerId);
 			rs = ps.executeQuery();
 			
 			while(rs.next()) {

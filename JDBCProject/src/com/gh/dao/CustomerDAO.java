@@ -30,7 +30,7 @@ public interface CustomerDAO {
 	public void cancelReservation(int reservationId)throws RecordNotFoundException, DMLException;
 
 	// 7. 예약 조회 (본인 예약 내역)
-	public List<Reservation> getAllReservation(int customerId)throws RecordNotFoundException, DMLException;
+	public List<Reservation> getReservation(int customerId)throws RecordNotFoundException, DMLException;
 
 	// 8. 게스트하우스 지역별 조회
 	public List<GuestHouse> getGuestHousesByRegion(String Region)throws RecordNotFoundException, DMLException;

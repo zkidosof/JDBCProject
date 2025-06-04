@@ -1,9 +1,6 @@
 package com.gh.vo;
 
-import java.sql.Date;
 import java.time.LocalDate;
-import java.util.ArrayList;
-
 public class Reservation {
 	private int num;// res_num
 	private String serviceName ; // 외래키

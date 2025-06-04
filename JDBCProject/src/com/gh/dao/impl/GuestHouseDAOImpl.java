@@ -20,16 +20,14 @@ import config.ServerInfo;
 public class GuestHouseDAOImpl implements GuestHouseDAO {
 	// 싱글톤
 	private static GuestHouseDAOImpl dao = new GuestHouseDAOImpl();
-	
+
 	public GuestHouseDAOImpl() {
 		System.out.println("Singletone Creating...");
 	}
-	
+
 	public static GuestHouseDAOImpl getInstance() {
 		return dao;
 	}
-
-	
 
 	public Connection getConnect() throws SQLException {
 		Connection conn = DriverManager.getConnection(ServerInfo.URL, ServerInfo.USER, ServerInfo.PASS);
@@ -37,20 +35,29 @@ public class GuestHouseDAOImpl implements GuestHouseDAO {
 		return conn;
 	}
 
-	
+	public boolean isExist(int num, Connection conn) throws SQLException {
+		String query = "SELECT gus_num FROM guesthouse WHERE gus_num=?";
+		PreparedStatement ps = conn.prepareStatement(query);
+		ps.setInt(1, num);
+		ResultSet rs = ps.executeQuery();
+		return rs.next();// ssn이 있으면 true |없으면 false
+	}
+
 	public void closeAll(PreparedStatement ps, Connection conn) throws DMLException {
 		try {
-			if(ps != null) ps.close();
-			if(conn != null) conn.close();			
+			if (ps != null)
+				ps.close();
+			if (conn != null)
+				conn.close();
 		} catch (SQLException e) {
 			throw new DMLException("DB 연결해제에 실패했습니다.");
 		}
 	}
 
-
 	public void closeAll(ResultSet rs, PreparedStatement ps, Connection conn) throws DMLException {
 		try {
-			if(rs != null) rs.close();
+			if (rs != null)
+				rs.close();
 			closeAll(ps, conn);
 		} catch (SQLException e) {
 			throw new DMLException("DB 연결해제에 실패했습니다.");
@@ -64,93 +71,91 @@ public class GuestHouseDAOImpl implements GuestHouseDAO {
 	}
 
 	/*
-	 * gus_num INT PRIMARY KEY, -- 게스트하우스 번호 
-	 * service_name VARCHAR(10), -- 서비스이름 (FK)
-	 * gus_name VARCHAR(10), -- 이름 
-	 * gus_address VARCHAR(30), -- 주소 
-	 * gus_price INT, -- 가격
-	 * gus_capacity INT, -- 수용인원
+	 * gus_num INT PRIMARY KEY, -- 게스트하우스 번호 service_name VARCHAR(10), -- 서비스이름 (FK)
+	 * gus_name VARCHAR(10), -- 이름 gus_address VARCHAR(30), -- 주소 gus_price INT, --
+	 * 가격 gus_capacity INT, -- 수용인원
 	 */
-	
+
 	@Override
 	public void registerGuestHouse(GuestHouse guestHouse) throws DuplicateException, DMLException {
 		Connection conn = null;
 		PreparedStatement ps = null;
-		
+
 		try {
-			conn = getConnect();
-			String query = "INSERT INTO guestHouse(name, address, price, capacity) VALUES(?,?,?,?)";
-			ps = conn.prepareStatement(query);
-			
-			ps.setString(1, guestHouse.getName());
-			ps.setString(2, guestHouse.getAddress());
-			ps.setInt(3, guestHouse.getPrice());
-			ps.setInt(4, guestHouse.getCapacity());
-			System.out.println(ps.executeUpdate() +"명 등록성공");
-			
-			
-		}catch(SQLException e) {
-			throw new DMLException("등록중 오류"+e.getMessage());
-		}finally {
+			if (!isExist(guestHouse.getNum(), conn)) {
+				String query = "INSERT INTO guestHouse(gus_num, service_name,gus_name,gus_address, gus_price, gus_capacity) VALUES(?,?,?,?,?,?)";
+				ps = conn.prepareStatement(query);
+				ps.setInt(1, guestHouse.getNum());
+				ps.setString(2, guestHouse.getServiceName());
+				ps.setString(3, guestHouse.getName());
+				ps.setString(4, guestHouse.getAddress());
+				ps.setInt(5, guestHouse.getPrice());
+				ps.setInt(6, guestHouse.getCapacity());
+				System.out.println(ps.executeUpdate() + "개 등록성공");
+			} else {
+				throw new DuplicateException(guestHouse.getName() + "은 등록되어 있는 게스트하우스입니다.");
+			}
+		} catch (SQLException e) {
+			throw new DMLException("등록중 오류" + e.getMessage());
+		} finally {
 			closeAll(ps, conn);
 		}
-		
 	}
 
 	@Override
 	public void updateGuestHouse(GuestHouse guestHouse) throws RecordNotFoundException, DMLException {
 		Connection conn = null;
 		PreparedStatement ps = null;
-		
+
 		try {
-			conn = getConnect();
-			String query = "UPDATE guestHouse SET name=?, address=?, price=?, capacity=? WHERE num =?";
-			ps = conn.prepareStatement(query);
-			
-			ps.setString(1, guestHouse.getName());
-			ps.setString(2, guestHouse.getAddress());
-			ps.setInt(3, guestHouse.getPrice());
-			ps.setInt(4, guestHouse.getCapacity());
-			ps.setInt(5, guestHouse.getNum());
-			System.out.println(ps.executeUpdate() +"명 수정함");
-			
-			
-		}catch(SQLException e) {
+			if (isExist(guestHouse.getNum(), conn)) {
+				String query = "UPDATE guestHouse SET gus_name=?, gus_address=?, gus_price=?, gus_capacity=? WHERE gus_num =?";
+				ps = conn.prepareStatement(query);
+				ps.setString(1, guestHouse.getName());
+				ps.setString(2, guestHouse.getAddress());
+				ps.setInt(3, guestHouse.getPrice());
+				ps.setInt(4, guestHouse.getCapacity());
+				ps.setInt(5, guestHouse.getNum());
+				System.out.println(ps.executeUpdate() + "명 수정함");
+			} else {
+				throw new RecordNotFoundException("해당 게하없음");
+			}
+		} catch (SQLException e) {
 			throw new DMLException("수정중 오류");
-		}catch(Exception e){
-			throw new RecordNotFoundException("해당 게하없음");
-			
-		}finally {
+		} finally {
 			closeAll(ps, conn);
 		}
-		
-	}
 
+	}
 
 	@Override
 	public void deleteGuestHouse(int guestHouseId) throws RecordNotFoundException, DMLException {
 		Connection conn = null;
 		PreparedStatement ps = null;
-		
+
 		try {
 			conn = getConnect();
-			String query = "DELETE FROM guestHouse WHERE num =?";
-			ps = conn.prepareStatement(query);
-			
-			ps.setInt(1, guestHouseId);	
-			
-			System.out.println(ps.executeUpdate() +"명 삭제함");
-			
-			
-		}catch(SQLException e) {
+			if (isExist(guestHouseId, conn)) {
+				String query = "DELETE FROM guestHouse WHERE gus_num = ?";
+				ps = conn.prepareStatement(query);
+
+				ps.setInt(1, guestHouseId);
+
+				System.out.println(ps.executeUpdate() + "명 삭제함");
+				ps.setInt(1, guestHouseId);
+				System.out.println(ps.executeUpdate() + "개 삭제함");
+			} else {
+				throw new RecordNotFoundException("해당 게하없음");
+			}
+
+		} catch (SQLException e) {
 			throw new DMLException("게하 삭제중 오류");
-			
-		}finally {
+
+		} finally {
 			closeAll(ps, conn);
 		}
-		
+
 	}
-	
 
 	@Override
 	public Map<String, Integer> getUsageStatsByDate() throws RecordNotFoundException, DMLException {
@@ -194,6 +199,4 @@ public class GuestHouseDAOImpl implements GuestHouseDAO {
 		return null;
 	}
 
-
-	
 }
