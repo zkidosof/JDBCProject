@@ -1,4 +1,4 @@
-package com.gh.impl;
+package com.gh.dao.impl;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
