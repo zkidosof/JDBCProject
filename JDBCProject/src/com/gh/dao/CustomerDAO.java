@@ -4,7 +4,7 @@ import java.sql.Date;
 import java.util.List;
 
 import com.gh.exception.DMLException;
-import com.gh.exception.DuplicateSSNException;
+import com.gh.exception.DuplicateException;
 import com.gh.exception.RecordNotFoundException;
 import com.gh.vo.Customer;
 import com.gh.vo.GuestHouse;
@@ -12,7 +12,7 @@ import com.gh.vo.Reservation;
 
 public interface CustomerDAO {
 	// 1. 회원가입
-	public void registerCustomer(Customer customer)throws DuplicateSSNException, DMLException;
+	public void registerCustomer(Customer customer)throws DuplicateException, DMLException;
 
 	// 2. 회원 정보 수정
 	public void updateCustomer(Customer customer)throws RecordNotFoundException, DMLException;
@@ -21,7 +21,7 @@ public interface CustomerDAO {
 	public void deleteCustomer(int customerId)throws RecordNotFoundException, DMLException;
 
 	// 4. 예약하기
-	public void addReservation(Reservation reservation)throws DuplicateSSNException, DMLException;
+	public void addReservation(Reservation reservation)throws DuplicateException, DMLException;
 
 	// 5. 예약 수정
 	public void updateReservation(Reservation reservation)throws RecordNotFoundException, DMLException;

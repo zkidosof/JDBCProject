@@ -10,7 +10,7 @@ import java.util.Map;
 
 import com.gh.dao.GuestHouseDAO;
 import com.gh.exception.DMLException;
-import com.gh.exception.DuplicateSSNException;
+import com.gh.exception.DuplicateException;
 import com.gh.exception.RecordNotFoundException;
 import com.gh.vo.Customer;
 
@@ -55,7 +55,7 @@ public class GuestHouseDAOImpl implements GuestHouseDAO {
 	}
 
 	@Override
-	public boolean registerGuestHouse(GuestHouseDAO guestHouse) throws DuplicateSSNException, DMLException {
+	public boolean registerGuestHouse(GuestHouseDAO guestHouse) throws DuplicateException, DMLException {
 		// TODO Auto-generated method stub
 		return false;
 	}

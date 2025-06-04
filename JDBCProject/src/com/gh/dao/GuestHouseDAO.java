@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.gh.exception.DMLException;
-import com.gh.exception.DuplicateSSNException;
+import com.gh.exception.DuplicateException;
 import com.gh.exception.RecordNotFoundException;
 import com.gh.vo.Customer;
 
@@ -13,7 +13,7 @@ public interface GuestHouseDAO {
 	public Map<String, Integer> getTotalSalesPerGuestHouse()throws RecordNotFoundException, DMLException;
 
 	// 2. 게스트하우스 등록
-	public boolean registerGuestHouse(GuestHouseDAO guestHouse)throws DuplicateSSNException, DMLException;
+	public boolean registerGuestHouse(GuestHouseDAO guestHouse)throws DuplicateException, DMLException;
 
 	// 3. 게스트하우스 정보 수정
 	public boolean updateGuestHouse(GuestHouseDAO guestHouse)throws RecordNotFoundException, DMLException;

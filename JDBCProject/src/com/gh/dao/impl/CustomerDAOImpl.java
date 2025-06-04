@@ -6,11 +6,13 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.SQLIntegrityConstraintViolationException;
+import java.util.ArrayList;
 import java.util.List;
 
 import com.gh.dao.CustomerDAO;
 import com.gh.exception.DMLException;
-import com.gh.exception.DuplicateSSNException;
+import com.gh.exception.DuplicateException;
 import com.gh.exception.RecordNotFoundException;
 import com.gh.vo.Customer;
 import com.gh.vo.GuestHouse;
@@ -30,26 +32,46 @@ public class CustomerDAOImpl implements CustomerDAO{
 		return dao;
 	}
 
-	public Connection getConnect() throws SQLException {
+	// 공통 로직
+	private Connection getConnect() throws SQLException {
 		Connection conn = DriverManager.getConnection(ServerInfo.URL, ServerInfo.USER, ServerInfo.PASS);
 		System.out.println("------데이타베이스 뚜뚜뚜-----");
 		return conn;
 	}
-
 	
-	public void closeAll(PreparedStatement ps, Connection conn) throws SQLException {
-		if(ps != null) ps.close();
-		if(conn != null) conn.close();
+	private void closeAll(PreparedStatement ps, Connection conn) throws DMLException {
+		try {
+			if(ps != null) ps.close();
+			if(conn != null) conn.close();
+		} catch (SQLException e) {
+			throw new DMLException("DB 연결해제에 실패했습니다.");
+		}
 	}
 
 
-	public void closeAll(ResultSet rs, PreparedStatement ps, Connection conn) throws SQLException {
-		if(rs != null) rs.close();
-		closeAll(ps, conn);
+	private void closeAll(ResultSet rs, PreparedStatement ps, Connection conn) throws DMLException {
+		try {
+			if(rs != null) rs.close();
+			closeAll(ps, conn);
+		} catch (SQLException e) {
+			throw new DMLException("DB 연결해제에 실패했습니다.");
+		}
+	}
+	
+	public boolean isExist(int resId, Connection conn) throws SQLException{
+		String query = "SELECT res_num FROM reservation WHERE res_num=?";
+		PreparedStatement ps = conn.prepareStatement(query);
+		
+		ps.setInt(1, resId);
+		
+		ResultSet rs = ps.executeQuery();
+		
+		return rs.next(); // 예약이 있으면 true | 없으면 false
 	}
 
+	// 비즈니스 로직
 	@Override
-	public void registerCustomer(Customer customer) throws DuplicateSSNException, DMLException {
+	public void registerCustomer(Customer customer) throws DuplicateException, DMLException {
 		// TODO Auto-generated method stub
 		
 	}
@@ -67,27 +89,114 @@ public class CustomerDAOImpl implements CustomerDAO{
 	}
 
 	@Override
-	public void addReservation(Reservation reservation) throws DuplicateSSNException, DMLException {
-		// TODO Auto-generated method stub
+	public void addReservation(Reservation reservation) throws DuplicateException, DMLException {
+		String query = "INSERT INTO reservation (res_num, service_name, cus_num, res_cindate, res_coutdate, res_tprice, res_tpeople)"
+				+ "VALUES (?, ?, ?, ?, ?, ?, ?)";
+		Connection conn = null;
+		PreparedStatement ps = null;
 		
+		try  {			
+			conn = getConnect();
+			ps = conn.prepareStatement(query);
+			
+			ps.setInt(1, reservation.getNum()); // res_num
+			ps.setString(2, reservation.getServiceName()); // service_name
+			ps.setInt(3, reservation.getCusNum()); // cus_num
+			ps.setDate(4, reservation.getCheckInDate()); // res_cindate
+			ps.setDate(5, reservation.getCheckOutDate()); // res_coutdate
+			ps.setInt(6, reservation.getTotalPrice()); // res_tprice
+			ps.setInt(7, reservation.getTotalPeople()); // res_tpeople
+			
+			System.out.println("예약 " + ps.executeUpdate() + "건 등록 성공...");
+		} catch (SQLIntegrityConstraintViolationException e) {
+			throw new DuplicateException("");
+		} catch (SQLException e) {
+			throw new DMLException("예약 등록에 실패하였습니다.");
+		} finally {
+			closeAll(ps, conn);
+		}
 	}
 
 	@Override
 	public void updateReservation(Reservation reservation) throws RecordNotFoundException, DMLException {
-		// TODO Auto-generated method stub
+		String query = "UPDATE reservation SET res_cindate=?, res_coutdate=?, res_tpeople=?"
+				+ "WHERE res_num=?";
+		Connection conn = null;
+		PreparedStatement ps = null;
 		
+		try {			
+			conn = getConnect();
+			ps = conn.prepareStatement(query);
+			
+			ps.setDate(1, reservation.getCheckInDate());
+			ps.setDate(2, reservation.getCheckOutDate());
+			ps.setInt(3, reservation.getTotalPeople());
+			ps.setInt(4, reservation.getNum());
+			
+			System.out.println("예약 " + ps.executeUpdate() + "건 수정 성공...");
+		} catch (SQLIntegrityConstraintViolationException e) {
+			throw new RecordNotFoundException("");
+		} catch (SQLException e) {
+			throw new DMLException("예약 수정에 실패하였습니다.");
+		} finally {
+			closeAll(ps, conn);
+		}
 	}
 
 	@Override
 	public void cancelReservation(int reservationId) throws RecordNotFoundException, DMLException {
-		// TODO Auto-generated method stub
+		String query = "DELETE FROM reservation WHERE res_num=?";
+		Connection conn = null;
+		PreparedStatement ps = null;
 		
+		try  {			
+			conn = getConnect();
+			
+			if (!isExist(reservationId, conn)) {
+				throw new SQLIntegrityConstraintViolationException();
+			}
+			
+			ps = conn.prepareStatement(query);
+			
+			ps.setInt(1, reservationId);
+			
+			System.out.println("예약 " + ps.executeUpdate() + "건 삭제 성공...");
+			
+		} catch (SQLIntegrityConstraintViolationException e) {
+			throw new RecordNotFoundException("해당 예약은 이미 존재하지 않습니다.");
+		} catch (SQLException e) {
+			throw new DMLException("예약 삭제에 실패하였습니다.");
+		} finally {
+			closeAll(ps, conn);
+		}
 	}
 
 	@Override
 	public List<Reservation> getAllReservation(int customerId) throws RecordNotFoundException, DMLException {
-		// TODO Auto-generated method stub
-		return null;
+		List<Reservation> resList = new ArrayList<>();
+		String query = "SELECT res_num, service_name, cus_num, res_cindate, res_coutdate, res_tprice, res_tpeople FROM reservation";
+		Connection conn = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		
+		try  {			
+			conn = getConnect();
+			ps = conn.prepareStatement(query);
+			rs = ps.executeQuery();
+			
+			while(rs.next()) {
+				resList.add(new Reservation(rs.getInt("res_num"), rs.getString("service_name"), rs.getInt("cus_num"), 
+						rs.getDate("res_cindate"), rs.getDate("res_coutdate"), rs.getInt("res_tprice"), rs.getInt("res_tpeople")));
+			}
+		} catch (SQLIntegrityConstraintViolationException e) {
+			throw new RecordNotFoundException("등록된 예약이 없습니다.");
+		} catch (SQLException e) {
+			throw new DMLException("예약 등록에 실패하였습니다.");
+		} finally {
+			closeAll(rs, ps, conn);
+		}
+		
+		return resList;
 	}
 
 	@Override
