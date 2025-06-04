@@ -174,7 +174,7 @@ public class CustomerDAOImpl implements CustomerDAO{
 
 	@Override
 	public void addReservation(Reservation reservation) throws DuplicateException, DMLException {
-		String query = "INSERT INTO reservation (res_num, service_name, cus_num, res_cindate, res_coutdate, res_tprice, res_tpeople)"
+		String query = "INSERT INTO reservation (res_num, gus_Num, cus_num, res_cindate, res_coutdate, res_tprice, res_tpeople)"
 				+ "VALUES (?, ?, ?, ?, ?, ?, ?)";
 		Connection conn = null;
 		PreparedStatement ps = null;
@@ -189,7 +189,7 @@ public class CustomerDAOImpl implements CustomerDAO{
 			ps = conn.prepareStatement(query);
 			
 			ps.setInt(1, reservation.getNum()); // res_num
-			ps.setString(2, reservation.getServiceName()); // service_name
+			ps.setInt(2, reservation.getGusNum()); // gus_Num
 			ps.setInt(3, reservation.getCusNum()); // cus_num
 			ps.setDate(4, Date.valueOf(reservation.getCheckInDate())); // res_cindate
 			ps.setDate(5, Date.valueOf(reservation.getCheckOutDate())); // res_coutdate
@@ -279,7 +279,7 @@ public class CustomerDAOImpl implements CustomerDAO{
 			rs = ps.executeQuery();
 			
 			while(rs.next()) {
-				resList.add(new Reservation(rs.getInt("res_num"), rs.getString("service_name"), rs.getInt("cus_num"), 
+				resList.add(new Reservation(rs.getInt("res_num"), rs.getInt("gus_Num"), rs.getInt("cus_num"), 
 						rs.getDate("res_cindate").toLocalDate(), rs.getDate("res_coutdate").toLocalDate(), rs.getInt("res_tprice"), rs.getInt("res_tpeople")));
 			}
 		} catch (SQLIntegrityConstraintViolationException e) {

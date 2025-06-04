@@ -5,7 +5,7 @@ import java.util.ArrayList;
 
 public class Reservation {
 	private int num;// res_num
-	private String serviceName ; // 외래키
+	private int gusNum ; // 외래키
 	private int cusNum;// 외래키
 	private LocalDate checkInDate; // res_cindate
 	private LocalDate checkOutDate;//res_coutdate
@@ -15,11 +15,11 @@ public class Reservation {
 		super();
 		// TODO Auto-generated constructor stub
 	}
-	public Reservation(int num, String serviceName, int cusNum, LocalDate checkInDate, LocalDate checkOutDate, int totalPrice,
+	public Reservation(int num, int gusNum, int cusNum, LocalDate checkInDate, LocalDate checkOutDate, int totalPrice,
 			int totalPeople) {
 		super();
 		this.num = num;
-		this.serviceName = serviceName;
+		this.gusNum = gusNum;
 		this.cusNum = cusNum;
 		this.checkInDate = checkInDate;
 		this.checkOutDate = checkOutDate;
@@ -32,11 +32,11 @@ public class Reservation {
 	public void setNum(int num) {
 		this.num = num;
 	}
-	public String getServiceName() {
-		return serviceName;
+	public int getGusNum() {
+		return gusNum;
 	}
-	public void setServiceName(String serviceName) {
-		this.serviceName = serviceName;
+	public void setGusNum(int gusNum) {
+		this.gusNum = gusNum;
 	}
 	public int getCusNum() {
 		return cusNum;
@@ -70,7 +70,7 @@ public class Reservation {
 	}
 	@Override
 	public String toString() {
-		return "Reservation [num=" + num + ", serviceName=" + serviceName + ", cusNum=" + cusNum + ", checkInDate="
+		return "Reservation [num=" + num + ", gusNum=" + gusNum + ", cusNum=" + cusNum + ", checkInDate="
 				+ checkInDate + ", checkOutDate=" + checkOutDate + ", totalPrice=" + totalPrice + ", totalPeople="
 				+ totalPeople + "]";
 	}
