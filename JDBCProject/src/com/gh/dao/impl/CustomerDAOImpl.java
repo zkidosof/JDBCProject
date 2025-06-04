@@ -268,7 +268,7 @@ public class CustomerDAOImpl implements CustomerDAO{
 	@Override
 	public List<Reservation> getReservation(int customerId) throws RecordNotFoundException, DMLException {
 		List<Reservation> resList = new ArrayList<>();
-		String query = "SELECT res_num, service_name, cus_num, res_cindate, res_coutdate, res_tprice, res_tpeople FROM reservation WHERE cus_num=?";
+		String query = "SELECT res_num, gus_Num, cus_num, res_cindate, res_coutdate, res_tprice, res_tpeople FROM reservation WHERE cus_num=?";
 		Connection conn = null;
 		PreparedStatement ps = null;
 		ResultSet rs = null;
