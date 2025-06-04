@@ -1,6 +1,6 @@
 package com.gh.dao;
 
-import java.sql.Date;
+import java.time.LocalDate;
 import java.util.List;
 
 import com.gh.exception.DMLException;
@@ -48,7 +48,7 @@ public interface CustomerDAO {
 	public List<GuestHouse> getGuestHouses(String service)throws RecordNotFoundException, DMLException;
 
 	// 13. 요일에 따른 요금 계산
-	public int calculatePriceByDay(String guestHouseName, Date date)throws RecordNotFoundException, DMLException;
+	public int calculatePriceByDay(int gusetHouseNum, LocalDate date)throws RecordNotFoundException, DMLException;
 
 
 }
