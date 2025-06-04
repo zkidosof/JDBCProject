@@ -93,14 +93,13 @@ public class GuestHouseDAOImpl implements GuestHouseDAO {
 
 		try {
 			if (!isExist(guestHouse.getNum(), conn)) {
-				String query = "INSERT INTO guestHouse(gus_num, service_name,gus_name,gus_address, gus_price, gus_capacity) VALUES(?,?,?,?,?,?)";
+				String query = "INSERT INTO guestHouse(gus_num,gus_name,gus_address, gus_price, gus_capacity) VALUES(?,?,?,?,?)";
 				ps = conn.prepareStatement(query);
 				ps.setInt(1, guestHouse.getNum());
-				ps.setString(2, guestHouse.getServiceName());
-				ps.setString(3, guestHouse.getName());
-				ps.setString(4, guestHouse.getAddress());
-				ps.setInt(5, guestHouse.getPrice());
-				ps.setInt(6, guestHouse.getCapacity());
+				ps.setString(2, guestHouse.getName());
+				ps.setString(3, guestHouse.getAddress());
+				ps.setInt(4, guestHouse.getPrice());
+				ps.setInt(5, guestHouse.getCapacity());
 				System.out.println(ps.executeUpdate() + "개 등록성공");
 			} else {
 				throw new DuplicateException(guestHouse.getName() + "은 등록되어 있는 게스트하우스입니다.");
@@ -166,22 +165,24 @@ public class GuestHouseDAOImpl implements GuestHouseDAO {
 		}
 
 	}
-
+	
+	// 날짜별 총 이용객 수 확인
 	@Override
 	public Map<String, Integer> getUsageStatsByDate() throws RecordNotFoundException, DMLException {
-		// TODO Auto-generated method stub
+		
 		return null;
 	}
-
+	
+	//날짜별 총 매출 확인
 	@Override
 	public Map<String, Integer> getSalesStatsByDate() throws RecordNotFoundException, DMLException {
 		// TODO Auto-generated method stub
 		return null;
 	}
-
+	
+	//매출 기준 Top 5 게스트하우스 조회
 	@Override
 	public List<GuestHouseDAO> getTop5GHByRevenue() throws RecordNotFoundException, DMLException {
-		// TODO Auto-generated method stub
 		return null;
 	}
 

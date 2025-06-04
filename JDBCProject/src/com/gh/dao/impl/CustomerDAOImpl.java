@@ -106,7 +106,7 @@ public class CustomerDAOImpl implements CustomerDAO{
 		try {
 		    conn = getConnect();
 		    if (!isExist(customer.getNum(), conn)) { // 추가하려는 회원번호가 없다면
-		        String query = "INSERT INTO customer( cus_num, cus_name, cus_address, cus_ssn, cus_gender, cus_phone, cus_grade) VALUES (?, ?, ?, ?, ?, ?, ?)";
+		        String query = "INSERT INTO customer( cus_num, cus_name, cus_address, cus_ssn, cus_gender, cus_phone) VALUES (?, ?, ?, ?, ?, ?)";
 		        ps = conn.prepareStatement(query);
 		        ps.setInt(1, customer.getNum());
 		        ps.setString(2, customer.getName());
@@ -114,7 +114,6 @@ public class CustomerDAOImpl implements CustomerDAO{
 		        ps.setString(4, customer.getSsn());
 		        ps.setString(5, String.valueOf(customer.getGender())); 
 		        ps.setString(6, customer.getPhone());
-		        ps.setString(7, customer.getGrade());
 
 		        System.out.println(ps.executeUpdate() + "명 성공!!!");
 		    }
@@ -175,7 +174,7 @@ public class CustomerDAOImpl implements CustomerDAO{
 
 	@Override
 	public void addReservation(Reservation reservation) throws DuplicateException, DMLException {
-		String query = "INSERT INTO reservation (res_num, service_name, cus_num, res_cindate, res_coutdate, res_tprice, res_tpeople)"
+		String query = "INSERT INTO reservation (res_num, gus_Num, cus_num, res_cindate, res_coutdate, res_tprice, res_tpeople)"
 				+ "VALUES (?, ?, ?, ?, ?, ?, ?)";
 		Connection conn = null;
 		PreparedStatement ps = null;
@@ -190,7 +189,7 @@ public class CustomerDAOImpl implements CustomerDAO{
 			ps = conn.prepareStatement(query);
 			
 			ps.setInt(1, reservation.getNum()); // res_num
-			ps.setString(2, reservation.getServiceName()); // service_name
+			ps.setInt(2, reservation.getGusNum()); // gus_Num
 			ps.setInt(3, reservation.getCusNum()); // cus_num
 			ps.setDate(4, Date.valueOf(reservation.getCheckInDate())); // res_cindate
 			ps.setDate(5, Date.valueOf(reservation.getCheckOutDate())); // res_coutdate
@@ -280,7 +279,7 @@ public class CustomerDAOImpl implements CustomerDAO{
 			rs = ps.executeQuery();
 			
 			while(rs.next()) {
-				resList.add(new Reservation(rs.getInt("res_num"), rs.getString("service_name"), rs.getInt("cus_num"), 
+				resList.add(new Reservation(rs.getInt("res_num"), rs.getInt("gus_Num"), rs.getInt("cus_num"), 
 						rs.getDate("res_cindate").toLocalDate(), rs.getDate("res_coutdate").toLocalDate(), rs.getInt("res_tprice"), rs.getInt("res_tpeople")));
 			}
 		} catch (SQLIntegrityConstraintViolationException e) {
