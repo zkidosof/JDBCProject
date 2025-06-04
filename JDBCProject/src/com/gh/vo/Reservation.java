@@ -1,21 +1,22 @@
 package com.gh.vo;
 
 import java.sql.Date;
+import java.time.LocalDate;
 import java.util.ArrayList;
 
 public class Reservation {
 	private int num;// res_num
 	private String serviceName ; // 외래키
 	private int cusNum;// 외래키
-	private Date checkInDate; // res_cindate
-	private Date checkOutDate;//res_coutdate
+	private LocalDate checkInDate; // res_cindate
+	private LocalDate checkOutDate;//res_coutdate
 	private int totalPrice; //res_tprice
 	private int totalPeople;// res_tpeople
 	public Reservation() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
-	public Reservation(int num, String serviceName, int cusNum, Date checkInDate, Date checkOutDate, int totalPrice,
+	public Reservation(int num, String serviceName, int cusNum, LocalDate checkInDate, LocalDate checkOutDate, int totalPrice,
 			int totalPeople) {
 		super();
 		this.num = num;
@@ -44,16 +45,16 @@ public class Reservation {
 	public void setCusNum(int cusNum) {
 		this.cusNum = cusNum;
 	}
-	public Date getCheckInDate() {
+	public LocalDate getCheckInDate() {
 		return checkInDate;
 	}
-	public void setCheckInDate(Date checkInDate) {
+	public void setCheckInDate(LocalDate checkInDate) {
 		this.checkInDate = checkInDate;
 	}
-	public Date getCheckOutDate() {
+	public LocalDate getCheckOutDate() {
 		return checkOutDate;
 	}
-	public void setCheckOutDate(Date checkOutDate) {
+	public void setCheckOutDate(LocalDate checkOutDate) {
 		this.checkOutDate = checkOutDate;
 	}
 	public int getTotalPrice() {

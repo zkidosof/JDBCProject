@@ -73,6 +73,7 @@ public class CustomerDAOImpl implements CustomerDAO{
 		
 		return rs.next();//ssn이 있으면 true |없으면 false
 	}
+	
 	public boolean isResExist(int resId, Connection conn) throws SQLException{
 		String query = "SELECT res_num FROM reservation WHERE res_num=?";
 		PreparedStatement ps = conn.prepareStatement(query);
@@ -170,6 +171,11 @@ public class CustomerDAOImpl implements CustomerDAO{
 		
 		try  {			
 			conn = getConnect();
+			
+			if (isResExist(reservation.getNum(), conn)) {
+				throw new SQLIntegrityConstraintViolationException();
+			}
+			
 			ps = conn.prepareStatement(query);
 			
 			ps.setInt(1, reservation.getNum()); // res_num
@@ -199,6 +205,11 @@ public class CustomerDAOImpl implements CustomerDAO{
 		
 		try {			
 			conn = getConnect();
+			
+			if (!isResExist(reservation.getNum(), conn)) {
+				throw new SQLIntegrityConstraintViolationException();
+			}
+			
 			ps = conn.prepareStatement(query);
 			
 			ps.setDate(1, reservation.getCheckInDate());
@@ -225,7 +236,7 @@ public class CustomerDAOImpl implements CustomerDAO{
 		try  {			
 			conn = getConnect();
 			
-			if (!isExist(reservationId, conn)) {
+			if (!isResExist(reservationId, conn)) {
 				throw new SQLIntegrityConstraintViolationException();
 			}
 			
