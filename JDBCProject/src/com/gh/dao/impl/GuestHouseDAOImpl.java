@@ -318,12 +318,12 @@ public class GuestHouseDAOImpl implements GuestHouseDAO {
 			
 			// {지역: 예약 리스트}로 반환
 			// 1. 
-			String query = "SELECT gus_num, gus_address FROM guestHouse";
+			String query = "SELECT gus_num, gus_address, substr(gus_address, 1, 2) address FROM guestHouse";
 			ps = conn.prepareStatement(query);
 			rs = ps.executeQuery();
 			Map<Integer, String> ghAddressMap = new HashMap<>(); 
 			while (rs.next()) {
-				ghAllResList.put(rs.getString("gus_address"), new ArrayList<Reservation>());
+				ghAllResList.put(rs.getString("address"), new ArrayList<Reservation>());
 				ghAddressMap.put(rs.getInt("gus_num"), rs.getString("gus_address"));
 			}		
 			
@@ -331,7 +331,7 @@ public class GuestHouseDAOImpl implements GuestHouseDAO {
 			ps = conn.prepareStatement(query);
 			rs = ps.executeQuery();
 			while (rs.next()) {
-				ghAllResList.get(ghAddressMap.get(rs.getInt("gus_Num")))
+				ghAllResList.get(ghAddressMap.get(rs.getInt("gus_Num")).substring(0, 2))
 							.add(new Reservation(rs.getInt("res_num"), rs.getInt("gus_Num"), rs.getInt("cus_num"), 
 									rs.getDate("res_cindate").toLocalDate(), rs.getDate("res_coutdate").toLocalDate(), 
 									rs.getInt("res_tprice"), rs.getInt("res_tpeople")));
