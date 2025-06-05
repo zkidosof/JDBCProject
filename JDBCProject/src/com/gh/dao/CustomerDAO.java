@@ -1,7 +1,12 @@
 package com.gh.dao;
 
-import java.sql.Date;
+
+import java.time.LocalDate;
 import java.util.List;
+
+import com.gh.exception.DMLException;
+import com.gh.exception.DuplicateException;
+import com.gh.exception.RecordNotFoundException;
 
 import com.gh.vo.Customer;
 import com.gh.vo.GuestHouse;
@@ -9,6 +14,7 @@ import com.gh.vo.Reservation;
 
 public interface CustomerDAO {
 	// 1. 회원가입
+
 	public boolean registerCustomer(Customer customer);
 
 	// 2. 회원 정보 수정

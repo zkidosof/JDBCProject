@@ -1,12 +1,14 @@
 package com.gh.vo;
 
+import java.util.ArrayList;
+
 public class GuestHouse {
 	private int num;// gus_num
-	private String serviceName;//service_name
 	private String name;// gus_name
 	private String address ;// gus_address
 	private int price;//gus_price
 	private int capacity;//gus_capacity
+	ArrayList<Reservation>reservation;
 	public GuestHouse() {
 		super();
 		// TODO Auto-generated constructor stub
@@ -14,7 +16,6 @@ public class GuestHouse {
 	public GuestHouse(int num, String serviceName, String name, String address, int price, int capacity) {
 		super();
 		this.num = num;
-		this.serviceName = serviceName;
 		this.name = name;
 		this.address = address;
 		this.price = price;
@@ -25,12 +26,6 @@ public class GuestHouse {
 	}
 	public void setNum(int num) {
 		this.num = num;
-	}
-	public String getServiceName() {
-		return serviceName;
-	}
-	public void setServiceName(String serviceName) {
-		this.serviceName = serviceName;
 	}
 	public String getName() {
 		return name;
@@ -58,7 +53,7 @@ public class GuestHouse {
 	}
 	@Override
 	public String toString() {
-		return "GuestHouse [num=" + num + ", serviceName=" + serviceName + ", name=" + name + ", address=" + address
+		return "GuestHouse [num=" + num + ", serviceName="  + ", name=" + name + ", address=" + address
 				+ ", price=" + price + ", capacity=" + capacity + "]";
 	}
 	
