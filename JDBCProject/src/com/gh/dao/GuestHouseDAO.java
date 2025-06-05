@@ -8,6 +8,7 @@ import com.gh.exception.DuplicateException;
 import com.gh.exception.RecordNotFoundException;
 import com.gh.vo.Customer;
 import com.gh.vo.GuestHouse;
+import com.gh.vo.Reservation;
 
 public interface GuestHouseDAO {
 	// 1. 게스트하우스별 총 매출 확인 (NTILE 등 분석 함수 기반)
@@ -41,9 +42,9 @@ public interface GuestHouseDAO {
 	// key: customerId, value: 등급
 
 	// 10. 전체 게스트하우스 예약 요약 (예약 수, 매출 집계)
-	public List<Map<String, Object>> getAllGHReservations()throws RecordNotFoundException, DMLException;
+	public Map<Integer, List<Reservation>> getAllGHReservations()throws RecordNotFoundException, DMLException;
 
 	// 11. 지역별 게스트하우스 예약 보기 (예약 수, 매출, 순위 포함)
-	public List<Map<String, Object>> getRegionGHReservation()throws RecordNotFoundException, DMLException;
+	public Map<String, List<Reservation>> getRegionGHReservation()throws RecordNotFoundException, DMLException;
 
 }

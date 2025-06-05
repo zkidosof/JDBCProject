@@ -5,7 +5,9 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -16,6 +18,7 @@ import com.gh.exception.DuplicateException;
 import com.gh.exception.RecordNotFoundException;
 import com.gh.vo.Customer;
 import com.gh.vo.GuestHouse;
+import com.gh.vo.Reservation;
 
 import config.ServerInfo;
 
@@ -312,15 +315,81 @@ public class GuestHouseDAOImpl implements GuestHouseDAO {
 	}
 
 	@Override
-	public List<Map<String, Object>> getAllGHReservations() throws RecordNotFoundException, DMLException {
-		// TODO Auto-generated method stub
-		return null;
+	public Map<Integer, List<Reservation>> getAllGHReservations() throws RecordNotFoundException, DMLException {
+		Map<Integer, List<Reservation>> ghAllResList = new HashMap<>();
+		
+		Connection conn = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		
+		try {
+			conn = getConnect();
+			
+			String query = "SELECT gus_num FROM guestHouse ORDER BY gus_Num";
+			ps = conn.prepareStatement(query);
+			rs = ps.executeQuery();
+			while (rs.next()) {
+				ghAllResList.put(rs.getInt("gus_num"), new ArrayList<Reservation>());
+			}		
+			
+			query = "SELECT res_num, gus_Num, cus_num, res_cindate, res_coutdate, res_tprice, res_tpeople FROM reservation ORDER BY gus_Num";
+			ps = conn.prepareStatement(query);
+			rs = ps.executeQuery();
+			while (rs.next()) {
+				ghAllResList.get(rs.getInt("gus_Num"))
+							.add(new Reservation(rs.getInt("res_num"), rs.getInt("gus_Num"), rs.getInt("cus_num"), 
+									rs.getDate("res_cindate").toLocalDate(), rs.getDate("res_coutdate").toLocalDate(), 
+									rs.getInt("res_tprice"), rs.getInt("res_tpeople")));
+			}
+			
+		} catch (SQLIntegrityConstraintViolationException e) {
+			throw new RecordNotFoundException("해당하는 게스트하우스가 존재하지 않음.");
+		} catch (SQLException e) {
+			throw new DMLException("전체 게스트하우스 예약 조회 실패함.");
+		}
+		
+		return ghAllResList;
 	}
 
 	@Override
-	public List<Map<String, Object>> getRegionGHReservation() throws RecordNotFoundException, DMLException {
-		// TODO Auto-generated method stub
-		return null;
+	public Map<String, List<Reservation>> getRegionGHReservation() throws RecordNotFoundException, DMLException {
+		Map<String, List<Reservation>> ghAllResList = new HashMap<>();
+		
+		Connection conn = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		
+		try {
+			conn = getConnect();
+			
+			// {지역: 예약 리스트}로 반환
+			// 1. 
+			String query = "SELECT gus_num, gus_address, substr(gus_address, 1, 2) address FROM guestHouse";
+			ps = conn.prepareStatement(query);
+			rs = ps.executeQuery();
+			Map<Integer, String> ghAddressMap = new HashMap<>(); 
+			while (rs.next()) {
+				ghAllResList.put(rs.getString("address"), new ArrayList<Reservation>());
+				ghAddressMap.put(rs.getInt("gus_num"), rs.getString("address"));
+			}		
+			
+			query = "SELECT res_num, gus_Num, cus_num, res_cindate, res_coutdate, res_tprice, res_tpeople FROM reservation";
+			ps = conn.prepareStatement(query);
+			rs = ps.executeQuery();
+			while (rs.next()) {
+				ghAllResList.get(ghAddressMap.get(rs.getInt("gus_num")))
+							.add(new Reservation(rs.getInt("res_num"), rs.getInt("gus_Num"), rs.getInt("cus_num"), 
+									rs.getDate("res_cindate").toLocalDate(), rs.getDate("res_coutdate").toLocalDate(), 
+									rs.getInt("res_tprice"), rs.getInt("res_tpeople")));
+			}
+			
+		} catch (SQLIntegrityConstraintViolationException e) {
+			throw new RecordNotFoundException("해당하는 게스트하우스가 존재하지 않음.");
+		} catch (SQLException e) {
+			throw new DMLException("전체 게스트하우스 예약 조회 실패함.");
+		}
+		
+		return ghAllResList;
 	}
 
 }

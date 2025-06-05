@@ -15,6 +15,9 @@ import com.gh.vo.Reservation;
 
 public class UnitTest implements Runnable {
 
+	/**
+	 * @param args
+	 */
 	public static void main(String[] args) {
 //		UnitTest test = new UnitTest();
 //		Thread t = new Thread(test);
@@ -39,30 +42,6 @@ public class UnitTest implements Runnable {
 //			cdao.updateReservation(new Reservation(1,"파티",1,new Date(2025,05,24),new Date(2025,05,24),10,6));
 //			cdao.cancelReservation(1);
 //			cdao.getReservation(1).stream().forEach(System.out::println);
-			System.out.println("\n=== 게스트하우스 매출 등급 테스트 ===");
-			
-			    Map<String, Integer> salesRank = gdao.getTotalSalesPerGuestHouse();
-
-			    for (Map.Entry<String, Integer> entry : salesRank.entrySet()) {
-			        String name = entry.getKey();
-			        int rank = entry.getValue();
-			        System.out.println("🏠 " + name + " → " + rank + "등급");
-			    }
-//			 System.out.println("\n=== 전체 고객 간단 조회 ===");
-//
-//	            
-//	                List<Customer> customerList = gdao.getAllCustomers();
-//
-//	                for (Customer c : customerList) {
-//	                    System.out.println(c); // toString() 오버라이드되어 있으면 이거면 충분
-//	                }
-//			System.out.println("\n=== 고객 등급 부여 테스트 ===");
-//			
-//			    gdao.assignCustomerGrades();
-//			System.out.println("\n=== 고객 할인율 조회 테스트 ===");
-//		
-//			    int discountRate = cdao.getDiscountedPrice(101); // 고객 ID 101
-//			    System.out.println("할인율: " + discountRate + "%");
 		}catch(Exception e) {
 			e.printStackTrace();
 		}
