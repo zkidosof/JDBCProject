@@ -39,7 +39,7 @@ public interface CustomerDAO {
 	public List<GuestHouse> getGuestHousesByRegion(String region);
 
 	// 9. 회원 등급 확인 및 할인 적용
-	public String getCustomerGrade(int customerId);
+	public int getDiscountedPrice(int customerId) throws DMLException;
 
 	// 10. 게스트하우스 전체 보기
 	public List<GuestHouse> getAllGuestHouses();
